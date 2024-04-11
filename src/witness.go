@@ -15,43 +15,19 @@ func main() {
 		os.Exit(1)
 	}
 
-	// new a githubAPIClient
-	githubAPIClient, err := newGithubAPIClient()
+	// load issue page
+	issuePageInfos, err := parseIssuePage(inputs.repoOwner, inputs.repoName, inputs.issueNum)
 	if err != nil {
 		fmt.Println(err.Error())
-		fmt.Println("Failed to new a github API client")
+		fmt.Println("Failed to parse issue page")
 		os.Exit(1)
 	}
 
-	// initialize a repoInfos
-	repoInfos, err := initRepoInfos(inputs.repoOwner, inputs.repoName, githubAPIClient)
-	if err != nil {
-		fmt.Println(err.Error())
-		fmt.Println("Failed to initialize a repoInfos")
-		os.Exit(1)
-	}
-
-	// initialize an issueInfos
-	issueInfos, err := initIssueInfos(repoInfos, inputs.issueNum, githubAPIClient)
-	if err != nil {
-		fmt.Println(err.Error())
-		fmt.Printf("Failed to initialize an issueInfos")
-		os.Exit(1)
-	}
-
-	// validate an issue
-	pkgInfos, err := validateIssue(issueInfos)
+	// validate issue
+	repoInfos, pkgInfos, err := validateIssue(issuePageInfos)
 	if err != nil {
 		fmt.Println(err.Error())
 		fmt.Printf("Failed to validate issue")
-		os.Exit(1)
-	}
-
-	// validate a package
-	err = validatePKG(pkgInfos)
-	if err != nil {
-		fmt.Println(err.Error())
-		fmt.Printf("Failed to validate package")
 		os.Exit(1)
 	}
 

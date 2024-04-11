@@ -2,7 +2,6 @@ package main
 
 import (
 	"crypto"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"strings"
@@ -12,36 +11,6 @@ import (
 )
 
 const TSA_URL = "http://timestamp.digicert.com"
-
-func getGithubTokenAPI() (string, error) {
-	oidcToken, err := reqOIDCToken("letsesign")
-	if err != nil {
-		fmt.Println(err.Error())
-		return "", errors.New("failed to request Github OIDC token")
-	}
-
-	resp, err := resty.New().R().
-		SetQueryString("auth=" + oidcToken).
-		Get("https://meis5lxrn2x7ctmljmb4iwiupy0onycc.lambda-url.us-east-1.on.aws")
-
-	if err != nil {
-		fmt.Println(err.Error())
-		return "", errors.New("error occurred while getting Github token")
-	}
-
-	if resp.StatusCode() != 200 {
-		return "", fmt.Errorf("invalid status code of get Github token API %d", resp.StatusCode())
-	}
-
-	var respData map[string]any
-	err = json.Unmarshal(resp.Body(), &respData)
-	if err != nil {
-		fmt.Println(err.Error())
-		return "", fmt.Errorf("failed to parse response of get Github token API")
-	}
-
-	return respData["token"].(string), nil
-}
 
 func exportAttestationAPI(attestation string) error {
 	resp, err := resty.New().R().
