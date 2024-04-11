@@ -76,7 +76,7 @@ func initPKGInfos(pkgType string, pkgName string, pkgVer string) (*PKGInfos, err
 			return nil, fmt.Errorf("failed to get cargo package hashes")
 		}
 	} else if pkgType == "pypi" {
-		hashes, err = getPypiHashes(pkgName, pkgType)
+		hashes, err = getPypiHashes(pkgName, pkgVer)
 		if err != nil {
 			fmt.Println(err.Error())
 			return nil, fmt.Errorf("failed to get pypi package hashes")
